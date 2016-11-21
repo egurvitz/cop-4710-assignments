@@ -134,10 +134,11 @@ public class PLSQL2XMLConverter
 
         try
         {
+            Extractor extracts = new Extractor();
             // Parse the input query.
             parser = PLSQL2XMLConverter.getParser(this.getInput());
             tree = parser.sql_script();
-
+            String command = this.getInput();
             try
             {
                 // Execute the input query.
@@ -150,7 +151,36 @@ public class PLSQL2XMLConverter
                     if ( results != null )
                     {
                         // Construct the output XML.
-                        this.setOutput(this.getXMLResults(results, results.getMetaData()));
+                        extracts.main(connection, command);
+                       // this.setOutput(this.getXMLResults(results, results.getMetaData()));
+                        ResultSetMetaData rsmd = results.getMetaData();
+                      //  System.out.println(getInput());
+                    // TODO: Convert the relational database output of the unmodified Oracle PL/SQL selection statement into XML.
+                        //include a scope conter when doing definition 3 
+                   /* System.out.println("<Query>");
+                    while(results.next())
+                    {
+                        System.out.println("<Record>");
+                        System.out.println(rsmd.getTableName(0));
+                        for(int i = 0; i < rsmd.getColumnCount(); i++)  
+                        {
+                           // System.out.println(rsmd.getTableName(i+1));
+                        //    if(getInput().contains("as"))
+                          //  {
+                                System.out.print("<" + rsmd.getColumnLabel(i+1) +" table=\"" + rsmd.getTableName(i+1) +"\" name=\"" + rsmd.getColumnName(i+1) +"\"> ");
+                                System.out.print(results.getString(i+1) + " ");
+                                System.out.println("</" + rsmd.getColumnLabel(i+1) +"> ");
+                           // }
+                           /* else
+                            {
+                            System.out.print("<" + rsmd.getColumnName(i+1) +" 2 name=\"" + rsmd.getColumnName(i+1) +"\"> ");
+                            System.out.print(results.getString(i+1) + " ");
+                            System.out.println("</" + rsmd.getColumnName(i+1) +"> ");
+                            }
+                        }  
+                        System.out.println("</Record>");
+                    }
+                    System.out.println("</Query>");*/
                     }
                 }
             }
@@ -202,6 +232,21 @@ public class PLSQL2XMLConverter
     protected final StringBuffer getOutput()
     {
         return this.output;
+    }
+    
+    public String tableName(String s) // added by Eric Gurvitz. Get table name as string following From
+    {
+        String delims = "[\\s]+"; // use space delimiter
+        String[] temp = s.split(delims);
+        String r = null;
+        for(int i = 0; i < temp.length; i++)
+        {
+            if(temp[i].equals("from"))
+            {
+                r = temp[i+1];
+            }
+        }
+        return r; 
     }
 
     /**

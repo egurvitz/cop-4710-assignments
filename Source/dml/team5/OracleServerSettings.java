@@ -10,8 +10,8 @@ package dml.team5;
 public final class OracleServerSettings
 {
     public final static String DATABASE = "dworcl";
-    public final static String PASSWORD = "n68808";
+    public final static String PASSWORD = "n39500";
     public final static String PORT     = "1521";
     public final static String SERVER   = "olympia.unfcsd.unf.edu";
-    public final static String USERNAME = "boyettem";
+    public final static String USERNAME = "gurvitze";
 }
